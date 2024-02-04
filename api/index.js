@@ -2,9 +2,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 dotenv.config();
 const app = express();
+
+// essential middleware
+app.use(express.json());
 
 // coonect to mongoDB database
 const conectDB = async (urlToDB) => {
@@ -21,5 +25,6 @@ app.listen(process.env.PORT, () => {
     conectDB(process.env.MONGO_DB)
 });
 
-// test route
+// ROUTINGS
 app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
