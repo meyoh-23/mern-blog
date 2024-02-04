@@ -1,14 +1,19 @@
-
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { About, Dashboard, Home, Projects, Signin, Signup } from './pages';
 
 function App() {
 
   return (
-    <>
-    <div className="bg-primary">
-      <h1 className="bg-red-500 text-yellow-400">Blog App with Tailwind</h1>
-    </div>
-      
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/about' element={<About/>}/>
+        <Route path='/sign-in' element={<Signin/>}/>
+        <Route path='/sign-up' element={<Signup/>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/projects' element={<Projects/>}/>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
