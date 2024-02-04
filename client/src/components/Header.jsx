@@ -45,6 +45,7 @@ const Header = () => {
                 <Link to="/sign-in">
                     <Button  
                     gradientDuoTone="purpleToBlue"
+                    outline
                     >
                         sign In
                     </Button>
