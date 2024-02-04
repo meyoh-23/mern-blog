@@ -1,5 +1,10 @@
 /** @type {import('tailwindcss').Config} */
-export const content = ["./index.html", "./src/**/*.{js,jsx}"];
+export const content = [
+    "./index.html", 
+    "./src/**/*.{js,jsx}",
+    'node_modules/flowbite-react/lib/esm/**/*.js',
+
+];
 export const mode = "jit";
 export const theme = {
     extend: {
@@ -38,5 +43,8 @@ export const theme = {
         xl: "1700px",
     },
 };
-export const plugins = [];
+export const plugins = [
+    // eslint-disable-next-line no-undef
+    require('flowbite/plugin'),
+];
 
