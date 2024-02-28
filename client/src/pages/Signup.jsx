@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
-import { Button, Label, TextInput } from "flowbite-react";
+import { Alert, Button, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { BiSolidHide, BiSolidShow} from "react-icons/bi";
 
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({});
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     // toggle showing and hiding password
     const togglePassword = (e) => {
@@ -15,13 +17,16 @@ const Signup = () => {
 
     // track form input fields
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
+        setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
         /* console.log(formData); */
     }
     
     // submit to the backend
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!formData.username || !formData.email || !formData.password) {
+            setErrorMessage("Please fill out all fields!");
+        }
         try {
             const res = await fetch('/api/auth/signup', {
                 method: 'POST',
@@ -31,9 +36,12 @@ const Signup = () => {
                 body: JSON.stringify(formData),
             })
             const data = await res.json();
-            console.log(data);
+            if (data.success === false) {
+                return setErrorMessage(data.message);
+            }
+            /* console.log(data); */
         } catch (error) {
-            console.log(error)
+            setErrorMessage(error.message);
         }
     }
 
@@ -104,6 +112,13 @@ const Signup = () => {
                                 Sign In
                             </Link>
                         </div>
+                        {
+                            errorMessage && (
+                                <Alert className="mt-5" color="failure">
+                                    {errorMessage}
+                                </Alert>
+                            )
+                        }
                     </div>
                 </div>
             </div>
