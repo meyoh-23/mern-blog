@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Alert, Button, Label, TextInput } from "flowbite-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { BiSolidHide, BiSolidShow} from "react-icons/bi";
 
@@ -8,6 +8,7 @@ const Signup = () => {
     const [formData, setFormData] = useState({});
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     // toggle showing and hiding password
     const togglePassword = (e) => {
@@ -25,9 +26,11 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.username || !formData.email || !formData.password) {
-            setErrorMessage("Please fill out all fields!");
+            return setErrorMessage("Please fill out all fields!");
         }
         try {
+            setLoading(true);
+            setErrorMessage(null);
             const res = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: {
@@ -37,11 +40,17 @@ const Signup = () => {
             })
             const data = await res.json();
             if (data.success === false) {
+                /* setLoading(false); */
                 return setErrorMessage(data.message);
             }
-            /* console.log(data); */
+            setLoading(false);
+            if (res.ok){
+                navigate('/sign-in');
+            }
         } catch (error) {
+            setLoading(false);
             setErrorMessage(error.message);
+            
         }
     }
 
@@ -100,8 +109,16 @@ const Signup = () => {
                                 {showPassword? <BiSolidShow size={25}/> : <BiSolidHide size={25}/>}
                             </button>
                         </div>
-                        <Button gradientDuoTone="purpleToPink" type="submit">
-                            Signup
+                        <Button gradientDuoTone="purpleToPink" type="submit" disabled={loading}>
+                            {
+                                loading? (
+                                    <>
+                                        <Spinner size="sm"/>
+                                        <span className="pl-3">Loading</span>
+                                    </>
+                                    
+                                    ) : "Signup"
+                            }
                         </Button>
                         </form>
                         <div className="flex gap-2 text-sm mt-5">
