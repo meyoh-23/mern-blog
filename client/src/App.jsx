@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { About, Dashboard, Home, Projects, Signin, Signup } from './pages';
-import { Header } from './components';
+import { Footer, Header } from './components';
 
 function App() {
 
@@ -15,6 +15,7 @@ function App() {
         <Route path='/dashboard' element={<Dashboard/>}/>
         <Route path='/projects' element={<Projects/>}/>
       </Routes>
+      <Footer/>
     </BrowserRouter>
   )
 }
