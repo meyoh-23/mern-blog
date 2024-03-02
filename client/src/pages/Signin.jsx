@@ -50,7 +50,7 @@ const Signin = () => {
                 navigate('/');
             }
         } catch (error) {
-            dispatch(signInFailure(error.message));
+            return dispatch(signInFailure(error.message));
         }
     }
 
