@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { BiSolidHide, BiSolidShow} from "react-icons/bi";
+import { Auth } from "../components";
 
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -120,6 +121,7 @@ const Signup = () => {
                                     ) : "Signup"
                             }
                         </Button>
+                        <Auth/>
                         </form>
                         <div className="flex gap-2 text-sm mt-5">
                             <span>

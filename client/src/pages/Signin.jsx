@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BiSolidHide, BiSolidShow} from "react-icons/bi";
 import { useDispatch, useSelector } from 'react-redux'
 import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
+import { Auth } from "../components";
 
 const Signin = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -112,6 +113,7 @@ const Signin = () => {
                                     ) : "Signin"
                             }
                         </Button>
+                        <Auth/>
                         </form>
                         <div className="flex gap-2 text-sm mt-5">
                             <span>
