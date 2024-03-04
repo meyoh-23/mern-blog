@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Button, Navbar, TextInput } from 'flowbite-react';
 import { Link, useLocation } from 'react-router-dom';
-import { AiOutlineSearch } from 'react-icons/ai'
-import { FaMoon } from 'react-icons/fa'
+import { AiOutlineSearch } from 'react-icons/ai';
+import { FaMoon } from 'react-icons/fa';
 
 const Header = () => {
     const path = useLocation().pathname;
@@ -17,8 +17,7 @@ const Header = () => {
                 </span>
                 Blog
             </Link>
-            <form action="
-            ">
+            <form>
                 <TextInput
                 type='text'
                 placeholder='Search...'
