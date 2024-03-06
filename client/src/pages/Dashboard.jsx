@@ -21,7 +21,7 @@ const Dashboard = () => {
             </div>
             {/* profile... */}
             {
-                tab == 'profile' && <DashProfile/>
+                tab === 'profile' && <DashProfile/>
             }
         </div>
     )
