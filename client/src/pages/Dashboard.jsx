@@ -4,17 +4,18 @@ import { DashProfile, DashSidebar } from '../components';
 
 const Dashboard = () => {
     const location = useLocation();
-    const[tab, stTab] = useState('');
+    const[tab, setTab] = useState('');
 
     useEffect(()=>{
         const urlParams = new URLSearchParams(location.search);
         const  tabfromURL = urlParams.get('tab');
-        console.log(tabfromURL);
+        if (tabfromURL) {
+            setTab(tabfromURL);
+        }
     },[location.search]);
 
-
     return (
-        <div className=''>
+        <div className='min-h-screen flex flex-col md:flex-row'>
             <div className="">
                 {/* Sidebar */}
                 <DashSidebar/>
