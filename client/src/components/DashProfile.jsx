@@ -5,6 +5,8 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { updateSuccess, updateStart, updateFailure } from '../redux/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function DashProfile () {
   const { currentUser } = useSelector(state => state.user);
@@ -13,6 +15,8 @@ export default function DashProfile () {
   const filePickerRef = useRef();
   const [imageFileUploadingProgress, setImageFileUploadingProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [ formData, setFormData] = useState({});
+  const dispatch = useDispatch();
 
   // TEST
   /* console.log("hii ni progress:- " + imageFileUploadingProgress, "upload ERROR:.." + imageFileUploadError); */
@@ -56,16 +60,49 @@ export default function DashProfile () {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
+          setFormData({...formData, profilePicture: downloadURL})
         });
       }
     )
   };
 
-  
+  const handleChange = (e) => {
+    setFormData( { ...formData, [e.target.id]: e.target.value } );
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (Object.keys(formData).length === 0) {
+      return;
+    }
+    // updating the profile now 05 04 02
+    try {
+      dispatch(updateStart());
+      const res = await fetch(`/api/user/update/:${currentUser._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        dispatch(updateFailure(data.message));
+      } else {
+        dispatch(updateSuccess(data));
+      }
+    } catch (error) {
+      dispatch(updateFailure(error.message));
+    }
+  }
+
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
-      <form  className='flex flex-col gap-4'>
+      <form  
+      className='flex flex-col gap-4'
+      onSubmit={handleSubmit}
+      >
 
         {/* PROFILE IMAGE UPLOAD */}
         <input 
@@ -114,18 +151,18 @@ export default function DashProfile () {
         type='text'
         id='username'
         placeholder='username'
-        defaultValue={currentUser.username}
+        defaultValue={currentUser.username} onChange={handleChange}
         />
         <TextInput
         type='email'
         id='email'
         placeholder='email'
-        defaultValue={currentUser.email}
+        defaultValue={currentUser.email} onChange={handleChange}
         />
         <TextInput
         type='password'
         id='password'
-        placeholder='password'
+        placeholder='password' onChange={handleChange}
         />
         <Button 
         type='submit'
