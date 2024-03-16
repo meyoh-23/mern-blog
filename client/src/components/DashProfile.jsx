@@ -17,6 +17,8 @@ export default function DashProfile () {
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [ formData, setFormData] = useState({});
   const dispatch = useDispatch();
+  const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [updateUserSuccess, setUpdateUserSuccess ] = useState(null);
 
   // TEST
   /* console.log("hii ni progress:- " + imageFileUploadingProgress, "upload ERROR:.." + imageFileUploadError); */
@@ -38,6 +40,7 @@ export default function DashProfile () {
 
   const uploadImage = async () => {
     /* console.log("uploading image..."); */
+    setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
     const fileName = new Date().getTime() + imageFile.name;
@@ -56,11 +59,13 @@ export default function DashProfile () {
         setImageFileUploadingProgress(null);
         setImageFileUrl(null);
         setImageFile(null);
+        setImageFileUploading(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
           setFormData({...formData, profilePicture: downloadURL})
+          setImageFileUploading(false);
         });
       }
     )
@@ -76,6 +81,10 @@ export default function DashProfile () {
       return;
     }
     // updating the profile now 05 04 02
+    // no data submission if image is still uploading
+    if (imageFileUploading) {
+      return;
+    }
     try {
       dispatch(updateStart());
       const res = await fetch(`/api/user/update/:${currentUser._id}`, {
@@ -90,6 +99,7 @@ export default function DashProfile () {
         dispatch(updateFailure(data.message));
       } else {
         dispatch(updateSuccess(data));
+        setUpdateUserSuccess("user profile updated successfully!");
       }
     } catch (error) {
       dispatch(updateFailure(error.message));
@@ -176,6 +186,13 @@ export default function DashProfile () {
         <span className='cursor-pointer'>Delete Account</span>
         <span className='cursor-pointer'>Signout</span>
       </div>
+      {
+        updateUserSuccess && (
+          <Alert color="success" className='mt-5'>
+            {updateSuccess}
+          </Alert>
+        )
+      }
     </div>
   )
 }
